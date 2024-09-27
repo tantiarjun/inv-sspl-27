@@ -1,0 +1,50 @@
+ {% extends 'layout.html' %} 
+
+
+{% block title %}
+ Supplier List
+ {% endblock %} 
+
+{%block content %}
+<h1 class="mb-3">Supplier List : </h1>
+
+<a href="{% url 'add_supplier' %}">
+    <button type="button" class="mb-3 btn btn-outline-secondary">Add Supplier</button>
+</a>
+<table class="table table-bordered table-hover border-secondary">
+    <thead class="table-primary">
+      <tr>
+        <th scope="col">S.No.</th>
+        <th scope="col">Supplier Name</th>
+        <th scope="col">Phone. No.</th>
+        <th scope="col">Address</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      {% for supplier in suppliers %}
+      <tr>
+          <td>{{ forloop.counter }}</td> 
+          <td>{{ supplier.supplier_name }}</td>
+          <td>{{ supplier.phone_no }}</td>
+          <td>{{ supplier.address }}</td>
+          
+          <td>
+              <a href="{% url 'edit_supplier' supplier.id %}">
+                  <button style="margin-right:10px;" class="btn btn-success">
+                      <i class="fas fa-edit"></i>
+                  </button> 
+              </a>
+              <a href="{% url 'delete_supplier' supplier.id %}" onclick="return confirm('Are you sure you want to delete this item?');">
+                  <button style="margin-left:10px;" class="btn btn-danger">
+                      <i class="fas fa-trash"></i>
+                  </button>
+              </a>
+          </td>
+      </tr>
+  {% endfor %}
+  
+        </tbody>
+  </table>
+
+{% endblock %} 

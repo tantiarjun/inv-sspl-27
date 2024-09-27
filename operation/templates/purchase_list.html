@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Purchase
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Purchase List :</h1>
+
+<a href="{% url 'purchase_master' %}">
+    <button type="button" class="mb-3 btn btn-outline-secondary">Purchase Items</button>
+</a>
+
+<table class="table table-bordered table-hover border-secondary">
+    <thead class="table-primary">
+        <tr>
+            <th scope="col">S.No.</th>
+            <th scope="col">Invoice No.</th>
+            <th scope="col">Invoice Date</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Supplier Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        {% for purchase in purchases %}
+        <tr>
+            <td>{{ forloop.counter }}</td> <!-- Automatically increment serial number -->
+            <td>{{ purchase.invoice_no }}</td> <!-- Invoice number from the database -->
+            <td>{{ purchase.invoice_date }}</td> <!-- Invoice date from the database -->
+            <td>{{ purchase.total_amount }}</td> <!-- Total amount from the database -->
+            <td>{{ purchase.supplier_id.supplier_name }}</td> <!-- Supplier name using foreign key relationship -->
+            <td>
+                <a href="{% url 'purchase_view' purchase.id %}">
+                    <button class="btn btn-success">View</button>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No purchases found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

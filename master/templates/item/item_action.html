@@ -1,0 +1,115 @@
+{% extends 'layout.html' %}
+
+{% comment %} {% block title %}
+    {% if action == None  %}
+        Item List
+    {% if action == 'add' %}
+        Add Item
+    {% elif action == 'edit' %}
+        Edit Item
+    {% elif action == 'delete' %}
+        Delete Item
+    {% endif %}
+{% endblock %} {% endcomment %}
+
+{% block title %}
+    {% if action == None %}
+        Item List
+    {% elif action == 'add' %}
+        Add Item
+    {% elif action == 'edit' %}
+        Edit Item
+    {% elif action == 'delete' %}
+        Delete Item
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {% if action == None %}
+        <h1 class="mb-3">Item List</h1>
+        <a href="{% url 'item_action' action='add' %}">
+            <button type="button" class="mb-3 btn btn-outline-secondary">Add Item</button>
+        </a>
+        <table class="table table-bordered table-hover border-secondary">
+            <thead  class="table-primary">
+                <tr >
+                    <th  scope="col">S.No.</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Item Image</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.unit_price }}</td>
+                    <td>
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.item_name }}" style="max-width: 40px; max-height: 30px;">
+                        {% else %}
+                            No image available
+                        {% endif %}
+                    </td>
+                    <td>
+
+                        <a  href="{% url 'item_action_with_id' action='edit' item_id=item.id %}">  
+                            <button  class=" mx-2 btn btn-success">
+                                <i class="fas fa-edit"></i>
+                            </button> 
+                        </a>
+
+                        <a   href="{% url 'item_action_with_id' action='delete' item_id=item.id %}">
+                            <button  class="mx-2 btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif action == 'add' or action == 'edit' %}
+        <h1>{{ action|capfirst }} Item</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+   
+            {% if item and item.image %}
+            <img src="{{ item.image.url }}" alt="Item Image" style="max-width: 150px; display:block;">
+           {% endif %}
+
+
+           {% if action == 'edit' %}
+           <button type="submit" class="btn btn-primary">Save Changes</button>
+
+           {% else %}
+           <button type="submit" class="btn btn-primary">{{ action|capfirst }} Item</button>
+           {% endif %}
+           
+            <a href="{% url 'item_action' %}" class="btn btn-danger">Cancel</a>
+        </form>
+       
+    {% elif action == 'delete' %}
+        <h1>Delete Item: {{ item.item_name }}</h1>
+
+        {% if item and item.image %}
+        <img src="{{ item.image.url }}" alt="Item Image" style="max-width: 150px; display:block;">
+       {% endif %}
+
+        <p class="fs-5">Are you sure you want to delete this item?</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a href="{% url 'item_action' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+        
+    {% endif %}
+{% endblock %}
+ 

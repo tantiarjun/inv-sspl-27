@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+ Add Supplier
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-5">Add Supplier</h1>
+
+<!-- Display alert messages -->
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Add Item Form -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Add Supplier</button>
+    <a href="{% url 'supplier_list' %}" class="btn btn-danger">Cancel</a>
+</form>
+
+{% endblock %}
